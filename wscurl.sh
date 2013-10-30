@@ -1,5 +1,5 @@
 curl \
 --header "content-type: text/xml; charset=utf-8" \
---data @sample.xml \
+--data @$1 \
 http://localhost:8080/wstest
 
