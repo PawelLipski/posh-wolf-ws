@@ -34,6 +34,7 @@ import javax.jws.WebService
 import javax.jws.soap.SOAPBinding
 import javax.jws.soap.SOAPBinding.Style
 import javax.xml.ws.Endpoint
+import util.Properties
  
 @WebService(targetNamespace="org.scalabound.test", name="org.scalabound.test", portName="test", serviceName="WSTest")
 private class MinimalSoapServer {
