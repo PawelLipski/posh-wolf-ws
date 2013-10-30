@@ -54,7 +54,7 @@ private class MinimalSoapServer {
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
         val port = Properties.envOrElse("PORT", "8080")
-	val url = "http://localhost:" + port + "/wstest";
+	val url = "http://0.0.0.0:" + port + "/wstest";
         val endpoint = Endpoint.publish(url, new MinimalSoapServer())
 	println(url)
 
