@@ -44,7 +44,8 @@ private class MinimalSoapServer {
 }
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
-        val endpoint = Endpoint.publish("http://localhost:8080/wstest", new MinimalSoapServer())
+        val port = Properties.envOrElse("PORT", "8080")
+        val endpoint = Endpoint.publish("http://localhost:" + port + "/wstest", new MinimalSoapServer())
         System.out.println("Waiting for requests...")
     }
 }
