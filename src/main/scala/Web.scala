@@ -33,6 +33,7 @@ class Hello extends Service[HttpRequest, HttpResponse] {
 import javax.jws.WebService
 import javax.jws.soap.SOAPBinding
 import javax.jws.soap.SOAPBinding.Style
+import java.net.InetSocketAddress
 import javax.xml.ws.Endpoint
 import util.Properties
  
