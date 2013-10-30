@@ -30,28 +30,38 @@ class Hello extends Service[HttpRequest, HttpResponse] {
   }
 } */
 
-import javax.jws.WebService
-import javax.jws.soap.SOAPBinding
-import javax.jws.soap.SOAPBinding.Style
 import java.net.InetSocketAddress
+import javax.jws.WebService
+import javax.jws.WebMethod
+import javax.jws.WebParam
+import javax.jws.WebParam.Mode
+import javax.jws.soap.SOAPBinding
+import javax.jws.soap.SOAPBinding.Use
+import javax.jws.soap.SOAPBinding.Style
 import javax.xml.ws.Endpoint
 import util.Properties
  
-@WebService(targetNamespace="org.scalabound.test", name="org.scalabound.test", portName="test", serviceName="WSTest")
+@WebService (targetNamespace="org.scalabound.test") //, name="org.scalabound.test", portName="test", serviceName="WSTest")
+@SOAPBinding(style = Style.RPC, use=Use.LITERAL) 
 private class MinimalSoapServer {
  
-    @SOAPBinding(style = Style.RPC)
-    def test(value : String) = "Hi " + value
+    @WebMethod
+    def test(
+    @WebParam(targetNamespace="org.scalabound.test", name="value", mode=Mode.IN)
+    value : String) = "Hi " + value
  
 }
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
-        //val port = Properties.envOrElse("PORT", "8080")
-        //val endpoint = Endpoint.publish("http://localhost:" + port + "/wstest", new MinimalSoapServer())
-    	val port = Properties.envOrElse("PORT", "8080").toInt
-	val url = (new InetSocketAddress(port)).toString + "/wstest"
+        val port = Properties.envOrElse("PORT", "8080")
+	val url = "http://localhost:" + port + "/wstest";
+        val endpoint = Endpoint.publish(url, new MinimalSoapServer())
 	println(url)
-	Endpoint.publish(url, new MinimalSoapServer())
+
+	//val url = (new InetSocketAddress(port)).toString + "/wstest"
+    	//val port = Properties.envOrElse("PORT", "8080").toInt
+	//Endpoint.publish(url, new MinimalSoapServer())
+
         System.out.println("Waiting for requests...")
     }
 }

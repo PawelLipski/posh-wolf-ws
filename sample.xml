@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope 
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!-- http://www.w3.org/2003/05/soap-envelope -->
+  <soapenv:Body>
+    <m:test xmlns:m="org.scalabound.test"> 
+      <!-- <m:value xmlns:m="org.scalabound.test" xsi:type="xsd:string" xmlns:xsi="">MyToken</token> -->
+      <!-- <value xsi:type="xsd:string">MyToken</value> -->
+      <!-- <value xsi:type="xsd:string">MyToken</value> -->
+      <value>MyToken</value>
+   </m:test> 
+  </soapenv:Body>
+</soapenv:Envelope>
+
