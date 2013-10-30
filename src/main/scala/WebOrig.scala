@@ -6,7 +6,7 @@ import com.twitter.util.Future
 import java.net.InetSocketAddress
 import util.Properties
 
-object Web {
+object WebOrig {
   def main(args: Array[String]) {
     val port = Properties.envOrElse("PORT", "8080").toInt
     println("Starting on port:"+port)
@@ -27,3 +27,4 @@ class Hello extends Service[HttpRequest, HttpResponse] {
     Future(response)
   }
 }
+
