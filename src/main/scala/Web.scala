@@ -58,7 +58,8 @@ object Web {
         val endpoint = Endpoint.publish(url, new MinimalSoapServer())
 	println(url)
 
-	//val url = (new InetSocketAddress(port)).toString + "/wstest"
+	val url2 = (new InetSocketAddress(port.toInt)).toString + "/wstest"
+	println("Alternative URL: " + url2)
     	//val port = Properties.envOrElse("PORT", "8080").toInt
 	//Endpoint.publish(url, new MinimalSoapServer())
 
