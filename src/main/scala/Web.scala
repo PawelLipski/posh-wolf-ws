@@ -28,6 +28,10 @@ private class MinimalSoapServer {
     def intMatrixTest(
     @WebParam(targetNamespace="org.scalabound.test", name="matrix", mode=Mode.IN)
     matrix : Array[Array[Int]]) = "Hi " + matrix(1)(1);
+
+    @WebMethod
+    def intMatrixToIntArray(@WebParam matrix : Array[Array[Int]]) 
+    	= Array("Aaa", "Bbb", "Ccc")
 }
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
