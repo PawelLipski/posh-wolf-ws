@@ -15,6 +15,8 @@ class MyObject(i: Int, s: String, m: Array[Array[Int]]) {
 	var str = s
 	var mat = m
 
+	def this() = this(0, "", null)
+
 	def getInt = int
 	def setInt(value: Int) { int = value }
 	def getStr = str
