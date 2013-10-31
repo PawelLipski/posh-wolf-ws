@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope 
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soapenv:Body>
+    <m:stringToComplexTypeDelayed xmlns:m="org.scalabound.test"> 
+      <msg>Hello world!</msg>
+   </m:stringToComplexTypeDelayed> 
+  </soapenv:Body>
+</soapenv:Envelope>
+

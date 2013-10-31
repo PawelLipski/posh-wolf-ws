@@ -51,7 +51,16 @@ private class MinimalSoapServer {
     @WebMethod
     def intMatrixToComplexType(@WebParam matrix : Array[Array[Int]]) 
     	= new MyObject(18, "foo", Array(Array(3,4),Array(5,6)))
+
+    @WebMethod
+    def stringToComplexTypeDelayed(
+    @WebParam(targetNamespace="org.scalabound.test", name="msg", mode=Mode.IN)
+    msg: String): MyObject = {
+        Thread.sleep(5000)
+    	return new MyObject(18, "Msg: " + msg, Array(Array(3,4),Array(5,6)))
+    }
 }
+
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
         val port = Properties.envOrElse("PORT", "8080")
