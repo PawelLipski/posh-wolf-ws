@@ -28,7 +28,9 @@ class MyObject(i: Int, s: String, m: Array[Array[Int]]) {
 @WebService (targetNamespace="org.scalabound.test") //, name="org.scalabound.test", portName="test", serviceName="WSTest")
 @SOAPBinding(style = Style.RPC, use=Use.LITERAL) 
 private class MinimalSoapServer {
- 
+
+    var progress: Int = 0
+
     @WebMethod
     def test(
     @WebParam(targetNamespace="org.scalabound.test", name="value", mode=Mode.IN)
@@ -66,12 +68,16 @@ private class MinimalSoapServer {
 	  def run() {
 		for (i <- List.range(1, 16)) {
 			Thread.sleep(1000)
+			progress = i
 		}
 	  }
 	})
 	task.start
 	return 345
     }
+
+    @WebMethod
+    def getProgress(): Int = progress
 }
 
 object Web {               
