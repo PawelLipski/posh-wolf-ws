@@ -10,6 +10,19 @@ import javax.jws.soap.SOAPBinding.Style
 import javax.xml.ws.Endpoint
 import util.Properties
  
+class MyObject(i: Int, s: String, m: Array[Array[Int]]) {
+	var int = i
+	var str = s
+	var mat = m
+
+	def getInt = int
+	def setInt(value: Int) { int = value }
+	def getStr = str
+	def setStr(value: String) { str = value }
+	def getMat = mat
+	def setMat(value: Array[Array[Int]]) { mat = value }
+}
+
 @WebService (targetNamespace="org.scalabound.test") //, name="org.scalabound.test", portName="test", serviceName="WSTest")
 @SOAPBinding(style = Style.RPC, use=Use.LITERAL) 
 private class MinimalSoapServer {
@@ -32,6 +45,10 @@ private class MinimalSoapServer {
     @WebMethod
     def intMatrixToIntArray(@WebParam matrix : Array[Array[Int]]) 
     	= Array("Aaa", "Bbb", "Ccc")
+	
+    @WebMethod
+    def intMatrixToComplexType(@WebParam matrix : Array[Array[Int]]) 
+    	= new MyObject(18, "foo", Array(Array(3,4),Array(5,6)))
 }
 object Web {               
     def main(args: Array[String]) { // main method to make this a runnable application
