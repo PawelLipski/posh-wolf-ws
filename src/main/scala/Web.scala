@@ -59,6 +59,19 @@ private class MinimalSoapServer {
         Thread.sleep(5000)
     	return new MyObject(18, "Msg: " + msg, Array(Array(3,4),Array(5,6)))
     }
+
+    @WebMethod
+    def initTask(): Int = {
+    	val task = new Thread(new Runnable {
+	  def run() {
+		for (i <- List.range(1, 16)) {
+			Thread.sleep(1000)
+		}
+	  }
+	})
+	task.start
+	return 345
+    }
 }
 
 object Web {               
