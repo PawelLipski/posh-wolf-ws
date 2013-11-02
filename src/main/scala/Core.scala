@@ -17,7 +17,22 @@ import scala.actors.Actor._
 private case class InitTaskRequest()
 private case class SetProgressRequest(id: Int, progress: Int)
 private case class GetProgressRequest(id: Int)
+private case class GetAllProgressesRequest(ids: Array[Int])
 private case class FinishTaskRequest(id: Int)
+
+class TaskProgressEntry(_id: Int, _progress: Int) {
+
+  private var id = _id
+  private var progress = _progress
+
+  def this() = this(0, 0)
+
+  def getId = id
+  def setId(_id: Int) = { id = _id }
+
+  def getProgress = progress
+  def setProgress(_progress: Int) = { progress = _progress }
+}
 
 @WebService (targetNamespace="com.poshwolf.ws")
 @SOAPBinding(style = Style.RPC, use=Use.LITERAL) 
@@ -62,6 +77,18 @@ class PoshWolfWebService {
     return res
   }
 
+  @WebMethod
+  def getAllProgresses( @WebParam(name="taskIds") taskIds: Array[Int]): Array[TaskProgressEntry] = {
+
+    //for (i <- List.range(0,tn.l)) {
+    //   res(i) = controller !? getProgressRequest(tn(i))
+    //} // albo jakiś ładne list comprehension
+    //println("Sending request for the progress of task #" + taskId)
+    val res = (controller !? GetAllProgressesRequest(taskIds)).asInstanceOf[Array[TaskProgressEntry]]
+    //println("Received progress = " + res)
+    return res
+  }
+
   private val controller = actor {
     val status = new HashMap[Int, Int]
     loop {
@@ -76,6 +103,10 @@ class PoshWolfWebService {
 
         case GetProgressRequest(id) => 
           reply(status.get(id))
+
+        case GetAllProgressesRequest(ids) => 
+          val res = for(id <- ids) yield new TaskProgressEntry(id, status.get(id))
+          reply(res.toArray)
 
         case FinishTaskRequest(id) => 
           status.put(id, 100) // TODO 100 - czy to jest ok wartosc?
