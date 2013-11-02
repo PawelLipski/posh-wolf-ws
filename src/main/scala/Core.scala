@@ -1,15 +1,28 @@
+package com.poshwolf.ws
 
+import java.net.InetSocketAddress
 import java.util.HashMap
-import scala.actors.Actor._
+import javax.jws.WebService
+import javax.jws.WebMethod
+import javax.jws.WebParam
+import javax.jws.soap.SOAPBinding
+import javax.jws.soap.SOAPBinding.Use
+import javax.jws.soap.SOAPBinding.Style
+import javax.xml.ws.Endpoint
 import List.range
+import util.Properties
+import scala.actors.Actor._
 
 private case class InitTaskRequest()
 private case class SetProgressRequest(id: Int, progress: Int)
 private case class GetProgressRequest(id: Int)
 private case class FinishTaskRequest(id: Int)
 
-object Core {
+@WebService (targetNamespace="com.poshwolf.ws")
+@SOAPBinding(style = Style.RPC, use=Use.LITERAL) 
+class PoshWolfWebService {
 
+  @WebMethod
   def initTask: Int = {
     val myId = (controller !? InitTaskRequest()).asInstanceOf[Int]
 
@@ -36,8 +49,8 @@ object Core {
     return myId
   }
 
-
-  def getProgress(taskId: Int): Int = {
+  @WebMethod
+  def getProgress(@WebParam taskId: Int): Int = {
     //Array[Int] res = new Int[tn.length] ??
     //for (i <- List.range(0,tn.l)) {
     //   res(i) = controller !? getProgressRequest(tn(i))
@@ -48,7 +61,7 @@ object Core {
     return res
   }
 
-  val controller = actor {
+  private val controller = actor {
     val status = new HashMap[Int, Int]
     loop {
       receive {
@@ -69,8 +82,13 @@ object Core {
     }
   }
 
+  controller.start()
+}
+
+object Core {
+
   def main(args: Array[String]) {
-    println("Starting controller...")
+    /*println("Starting controller...")
     controller.start()
     println("Controller started")
 
@@ -86,8 +104,14 @@ object Core {
       val progress2 = Core.getProgress(id2)
       println("Progress of task " + id2 + " is " + progress2)
     }
-  }
+  }*/
 
+    val port = Properties.envOrElse("PORT", "8080")
+    val url = "http://0.0.0.0:" + port + "/posh-wolf-ws";
+    val endpoint = Endpoint.publish(url, new PoshWolfWebService())
+
+    println("Waiting for requests on " + url + "...")
+  }
 }
 
 
