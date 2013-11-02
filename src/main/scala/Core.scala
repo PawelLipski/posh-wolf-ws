@@ -108,7 +108,7 @@ object Core {
   }*/
 
     val port = Properties.envOrElse("PORT", "8080")
-    val url = "http://0.0.0.0:" + port + "/posh-wolf-ws";
+    val url = "http://0.0.0.0:" + port + "/" // + "/posh-wolf-ws";
     val endpoint = Endpoint.publish(url, new PoshWolfWebService())
 
     println("Waiting for requests on " + url + "...")
