@@ -5,6 +5,7 @@ import java.util.HashMap
 import javax.jws.WebService
 import javax.jws.WebMethod
 import javax.jws.WebParam
+import javax.jws.WebParam.Mode
 import javax.jws.soap.SOAPBinding
 import javax.jws.soap.SOAPBinding.Use
 import javax.jws.soap.SOAPBinding.Style
@@ -50,7 +51,7 @@ class PoshWolfWebService {
   }
 
   @WebMethod
-  def getProgress(@WebParam taskId: Int): Int = {
+  def getProgress( @WebParam(name="taskId") taskId: Int): Int = {
     //Array[Int] res = new Int[tn.length] ??
     //for (i <- List.range(0,tn.l)) {
     //   res(i) = controller !? getProgressRequest(tn(i))
