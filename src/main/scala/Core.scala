@@ -52,10 +52,10 @@ class PoshWolfWebService {
       }
       // run magicAlgo(listener)*/
 
-      for (i <- List.range(1, 30)) {
-        Thread.sleep(1000)
+      for (i <- List.range(0, 10)) {
         //println("Id: " + myId + ", progress: " + i)
         controller ! SetProgressRequest(myId, i)
+        Thread.sleep(1000)
       }
         
       controller ! FinishTaskRequest(myId)
