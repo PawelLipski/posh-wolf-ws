@@ -92,7 +92,7 @@ class PoshWolfWebService {
   }
 
   @WebMethod
-  def solve( @WebParam task: TaskDefinition): ComputationResult = null
+  def solve( @WebParam task: TaskDefinition): ComputationResult = new ComputationResult()
 
   private val controller = actor {
     val status = new HashMap[Int, Int]
