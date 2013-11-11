@@ -5,23 +5,25 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <soapenv:Body>
     <m:solve xmlns:m="com.poshwolf.ws"> 
-      
-      <jobCount>2</jobCount>
+  
+      <task>
+        <jobCount>2</jobCount>
 
-      <machineCount>3</machineCount>
+        <machineCount>3</machineCount>
 
-      <opDurationsForJobs soapenv:arrayType="xsd:int[][]">
-        <item>
-          <item>1</item>
-          <item>2</item>
-          <item>3</item>
-        </item>
-        <item>
-          <item>4</item>
-          <item>5</item>
-          <item>6</item>
-        </item>
-      </opDurationsForJobs>
+        <opDurationsForJobs soapenv:arrayType="xsd:int[][]">
+          <item>
+            <item>1</item>
+            <item>2</item>
+            <item>3</item>
+          </item>
+          <item>
+            <item>4</item>
+            <item>5</item>
+            <item>6</item>
+          </item>
+        </opDurationsForJobs>
+      </task>
    </m:solve> 
   </soapenv:Body>
 </soapenv:Envelope>

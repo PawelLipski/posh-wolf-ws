@@ -92,7 +92,18 @@ class PoshWolfWebService {
   }
 
   @WebMethod
-  def solve( @WebParam task: TaskDefinition): ComputationResult = new ComputationResult()
+  def solve( @WebParam(name="task") task: TaskDefinition): ComputationResult = {
+    val result = new ComputationResult()
+
+    val order = for (i <- List.range(0, task.getMachineCount)) 
+      yield new Array[Int](task.getJobCount)
+
+    result.setJobOrderForMachines(order.toArray)
+    result.setExecutionTimespan(2345)
+    result.setComputationTime(23.45)
+
+    result
+  }
 
   private val controller = actor {
     val status = new HashMap[Int, Int]
