@@ -1,1 +1,2 @@
-web: target/start com.poshwolf.ws.Core
+web: target/start com.poshwolf.ws.WebServiceMain
+

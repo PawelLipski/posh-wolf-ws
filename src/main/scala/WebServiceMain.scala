@@ -117,7 +117,7 @@ class PoshWolfWebService {
   controller.start()
 }
 
-object Core {
+object WebServiceMain {
 
   def main(args: Array[String]) {
     /*println("Starting controller...")
