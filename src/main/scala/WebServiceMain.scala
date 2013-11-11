@@ -1,5 +1,7 @@
 package com.poshwolf.ws
 
+import com.poshwolf.core._
+
 import java.net.InetSocketAddress
 import java.util.HashMap
 import javax.jws.WebService
@@ -88,6 +90,9 @@ class PoshWolfWebService {
     //println("Received progress = " + res)
     return res
   }
+
+  @WebMethod
+  def solve( @WebParam task: TaskDefinition): ComputationResult = null
 
   private val controller = actor {
     val status = new HashMap[Int, Int]
