@@ -1,11 +1,7 @@
 
 package com.poshwolf.core;
 
-public class ComputationResult {
-
-  // The order of jobs to be executed on each machine
-  // found by the algorithm
-  private int[][] jobOrderForMachines; // matrix: machinCount x jobCount
+public class Result {
 
   // The actual result - the minimal overall timespan of execution
   private int executionTimespan;
@@ -30,13 +26,6 @@ public class ComputationResult {
       this.computationTime = computationTime;
   }
 
-  public int[][] getJobOrderForMachines() {
-      return jobOrderForMachines;
-  }
-  
-  public void setJobOrderForMachines(int[][] jobOrderForMachines) {
-      this.jobOrderForMachines = jobOrderForMachines;
-  }
 }
 
 

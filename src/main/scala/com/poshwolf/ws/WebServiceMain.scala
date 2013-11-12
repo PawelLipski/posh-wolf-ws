@@ -92,8 +92,8 @@ class PoshWolfWebService {
   }
 
   @WebMethod
-  def solve( @WebParam(name="task") task: TaskDefinition): ComputationResult = {
-    val result = new ComputationResult()
+  def solve( @WebParam(name="task") task: TaskDefinition): ResultWithOrder = {
+    val result = new ResultWithOrder()
 
     val order = for (i <- List.range(0, task.getMachineCount)) 
       yield new Array[Int](task.getJobCount)
