@@ -16,11 +16,11 @@ import List.range
 import util.Properties
 import scala.actors.Actor._
 
-private case class InitTaskRequest()
+private case class PostTaskRequest(task: TaskDefinition)
 private case class SetProgressRequest(id: Int, progress: Int)
 private case class GetProgressRequest(id: Int)
 private case class GetAllProgressesRequest(ids: Array[Int])
-private case class FinishTaskRequest(id: Int)
+private case class FinishTaskRequest(id: Int, result: ResultWithOrder)
 
 class TaskProgressEntry(_id: Int, _progress: Int) {
 
@@ -41,8 +41,8 @@ class TaskProgressEntry(_id: Int, _progress: Int) {
 class PoshWolfWebService {
 
   @WebMethod
-  def initTask: Int = {
-    val myId = (controller !? InitTaskRequest()).asInstanceOf[Int]
+  def postTask( @WebParam(name="task") task: TaskDefinition): Int = {
+    val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
 
     actor {
       //controller ! InitTaskRequest(myId)
@@ -59,8 +59,15 @@ class PoshWolfWebService {
         controller ! SetProgressRequest(myId, i)
         Thread.sleep(1000)
       }
+
+      val result = new DummySolver().solve(task, 
+        new ProgressListener() {
+          override def onProgress(percentDone: Int, resultSoFar: Int) {
+          }
+        }
+      )
         
-      controller ! FinishTaskRequest(myId)
+      controller ! FinishTaskRequest(myId, result)
 
     }.start()
 
@@ -109,7 +116,7 @@ class PoshWolfWebService {
     val status = new HashMap[Int, Int]
     loop {
       receive {
-        case InitTaskRequest() => 
+        case PostTaskRequest(task) => 
           val newId = status.size + 1
           status.put(newId, 0)
           reply(newId)
@@ -124,7 +131,7 @@ class PoshWolfWebService {
           val res = for(id <- ids) yield new TaskProgressEntry(id, status.get(id))
           reply(res.toArray)
 
-        case FinishTaskRequest(id) => 
+        case FinishTaskRequest(id, result) => 
           status.put(id, 100) // TODO 100 - czy to jest ok wartosc?
       }
     }
