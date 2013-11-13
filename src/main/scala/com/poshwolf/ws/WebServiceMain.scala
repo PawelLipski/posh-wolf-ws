@@ -17,8 +17,10 @@ import util.Properties
 import scala.actors.Actor._
 
 private case class PostTaskRequest(task: TaskDefinition)
+private case class GetTaskDefinitionRequest(id: Int)
 private case class SetProgressRequest(id: Int, progress: Int)
 private case class GetProgressRequest(id: Int)
+private case class GetResultRequest(id: Int)
 private case class GetAllProgressesRequest(ids: Array[Int])
 private case class FinishTaskRequest(id: Int, result: ResultWithOrder)
 
@@ -75,28 +77,22 @@ class PoshWolfWebService {
   }
 
   @WebMethod
-  def getProgress( @WebParam(name="taskId") taskId: Int): Int = {
-    //Array[Int] res = new Int[tn.length] ??
-    //for (i <- List.range(0,tn.l)) {
-    //   res(i) = controller !? getProgressRequest(tn(i))
-    //} // albo jakiś ładne list comprehension
-    //println("Sending request for the progress of task #" + taskId)
-    val res = (controller !? GetProgressRequest(taskId)).asInstanceOf[Int]
-    //println("Received progress = " + res)
-    return res
-  }
+  def getProgress( @WebParam(name="taskId") taskId: Int): Int = 
+    (controller !? GetProgressRequest(taskId)).asInstanceOf[Int]
 
   @WebMethod
-  def getAllProgresses( @WebParam(name="taskIds") taskIds: Array[Int]): Array[TaskProgressEntry] = {
+  def getAllProgresses( @WebParam(name="taskIds") taskIds: Array[Int]): Array[TaskProgressEntry] = 
+    (controller !? GetAllProgressesRequest(taskIds)).asInstanceOf[Array[TaskProgressEntry]]
 
-    //for (i <- List.range(0,tn.l)) {
-    //   res(i) = controller !? getProgressRequest(tn(i))
-    //} // albo jakiś ładne list comprehension
-    //println("Sending request for the progress of task #" + taskId)
-    val res = (controller !? GetAllProgressesRequest(taskIds)).asInstanceOf[Array[TaskProgressEntry]]
-    //println("Received progress = " + res)
-    return res
-  }
+  @WebMethod
+  def getResult( @WebParam(name="taskId") taskId: Int): Result = 
+    (controller !? GetResultRequest(taskId)).asInstanceOf[Result]
+
+  @WebMethod
+  def getFullResult( @WebParam(name="taskId") taskId: Int): ResultWithOrderAndInput = 
+    new ResultWithOrderAndInput(
+     (controller !? GetTaskDefinitionRequest(taskId)).asInstanceOf[TaskDefinition],
+     (controller !? GetResultRequest(taskId)).asInstanceOf[ResultWithOrder])
 
   @WebMethod
   def solve( @WebParam(name="task") task: TaskDefinition): ResultWithOrder = {
@@ -113,13 +109,20 @@ class PoshWolfWebService {
   }
 
   private val controller = actor {
+    val tasks = new HashMap[Int, TaskDefinition]
     val status = new HashMap[Int, Int]
+    val resultsWithOrders = new HashMap[Int, ResultWithOrder]
+
     loop {
       receive {
         case PostTaskRequest(task) => 
           val newId = status.size + 1
+          tasks.put(newId, task)
           status.put(newId, 0)
           reply(newId)
+
+        case GetTaskDefinitionRequest(id) => 
+          reply(tasks.get(id))
 
         case SetProgressRequest(id, progress) =>  /// TODO partialResult? iterNo czy percent??
           status.put(id, progress)
@@ -127,12 +130,16 @@ class PoshWolfWebService {
         case GetProgressRequest(id) => 
           reply(status.get(id))
 
+        case GetResultRequest(id) =>  // TODO co jesli jeszcze sie nie skonczylo?
+          reply(resultsWithOrders.get(id))
+
         case GetAllProgressesRequest(ids) => 
           val res = for(id <- ids) yield new TaskProgressEntry(id, status.get(id))
           reply(res.toArray)
 
         case FinishTaskRequest(id, result) => 
           status.put(id, 100) // TODO 100 - czy to jest ok wartosc?
+          resultsWithOrders.put(id, result)
       }
     }
   }
