@@ -10,6 +10,7 @@ public class Launcher {
     
     int no = 0;
     while (sc.hasNextLine()) {      
+      no++;
       sc.nextLine();
       
       int jobCnt = sc.nextInt();
@@ -34,10 +35,10 @@ public class Launcher {
       
       Solver solver = new DummySolver();
       TaskDefinition task = new TaskDefinition(jobCnt, machineCnt, opDurationsForJobs);
-      solver.solve(task, new DummyProgressListener());
+      Result result = solver.solve(task, new DummyProgressListener());
       
-      System.out.println(no + ": " + jobCnt + "/" + machineCnt);
-      no++;
+      System.out.println(no + ": " + jobCnt + "/" + machineCnt + 
+	" => " + result.getExecutionTimespan() + " in " + result.getComputationTime() + " sec");      
     }
   }
 }
