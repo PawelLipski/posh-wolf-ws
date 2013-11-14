@@ -32,6 +32,10 @@ public class Launcher {
       }       
       sc.nextLine();
       
+      Solver solver = new DummySolver();
+      TaskDefinition task = new TaskDefinition(jobCnt, machineCnt, opDurationsForJobs);
+      solver.solve(task, new DummyProgressListener());
+      
       System.out.println(no + ": " + jobCnt + "/" + machineCnt);
       no++;
     }
