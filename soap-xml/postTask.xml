@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope 
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soapenv:Body>
+    <m:postTask xmlns:m="com.poshwolf.ws"> 
+  
+      <task>
+        <jobCount>2</jobCount>
+
+        <machineCount>3</machineCount>
+
+        <opDurationsForJobs soapenv:arrayType="xsd:int[][3]">
+          <items>
+            <item>1</item>
+            <item>2</item>
+            <item>3</item>
+          </items>
+          <items>
+            <item>4</item>
+            <item>5</item>
+            <item>6</item>
+          </items>
+          <items>
+            <item>7</item>
+            <item>8</item>
+            <item>9</item>
+          </items>
+        </opDurationsForJobs>
+      </task>
+   </m:postTask> 
+  </soapenv:Body>
+</soapenv:Envelope>
+

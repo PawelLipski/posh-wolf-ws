@@ -2,17 +2,16 @@ package com.poshwolf.core;
 
 public class DummySolver implements Solver {
 
-  public ResultWithOrder solve(TaskDefinition task, ProgressListener listener) {
-    ResultWithOrder r = new ResultWithOrder();
+  public Result solve(TaskDefinition task, ProgressListener listener) {
+    Result r = new Result();
 
     r.setExecutionTimespan(2345);
     r.setComputationTime(23.45);
 
-    int[][] o = new int[task.getMachineCount()][task.getJobCount()];;
-    for (int m = 0; m < task.getMachineCount(); m++) 
-      for (int j = 0; j < task.getJobCount(); j++)
-        o[m][j] = (m + 1) * (j + 1);
-    r.setJobOrderForMachines(o);
+    int[] o = new int[task.getJobCount()];    
+    for (int j = 0; j < task.getJobCount(); j++)
+      o[j] = j + 1;
+    r.setJobOrder(o);
 
     return r;
   }

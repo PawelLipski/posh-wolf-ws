@@ -22,7 +22,7 @@ private case class SetProgressRequest(id: Int, progress: Int)
 private case class GetProgressRequest(id: Int)
 private case class GetResultRequest(id: Int)
 private case class GetAllProgressesRequest(ids: Array[Int])
-private case class FinishTaskRequest(id: Int, result: ResultWithOrder)
+private case class FinishTaskRequest(id: Int, result: Result)
 
 class TaskProgressEntry(_id: Int, _progress: Int) {
 
@@ -56,6 +56,12 @@ class PoshWolfWebService {
       }
       // run magicAlgo(listener)*/
 
+      for (
+	i <- task.getOpDurationsForJobs;
+	j <- i) 
+	println(j)
+	
+      
       for (i <- List.range(0, 10)) {
         //println("Id: " + myId + ", progress: " + i)
         controller ! SetProgressRequest(myId, i)
@@ -89,19 +95,18 @@ class PoshWolfWebService {
     (controller !? GetResultRequest(taskId)).asInstanceOf[Result]
 
   @WebMethod
-  def getFullResult( @WebParam(name="taskId") taskId: Int): ResultWithOrderAndInput = 
-    new ResultWithOrderAndInput(
+  def getResultAndInput( @WebParam(name="taskId") taskId: Int): ResultAndInput = 
+    new ResultAndInput(
      (controller !? GetTaskDefinitionRequest(taskId)).asInstanceOf[TaskDefinition],
-     (controller !? GetResultRequest(taskId)).asInstanceOf[ResultWithOrder])
+     (controller !? GetResultRequest(taskId)).asInstanceOf[Result])
 
   @WebMethod
-  def solve( @WebParam(name="task") task: TaskDefinition): ResultWithOrder = {
-    val result = new ResultWithOrder()
+  def solve( @WebParam(name="task") task: TaskDefinition): Result = {
+    val result = new Result()
 
-    val order = for (i <- List.range(0, task.getMachineCount)) 
-      yield new Array[Int](task.getJobCount)
+    val order = for (i <- List.range(0, task.getMachineCount)) yield (i + 1)
 
-    result.setJobOrderForMachines(order.toArray)
+    result.setJobOrder(order.toArray)
     result.setExecutionTimespan(2345)
     result.setComputationTime(23.45)
 
@@ -111,7 +116,7 @@ class PoshWolfWebService {
   private val controller = actor {
     val tasks = new HashMap[Int, TaskDefinition]
     val status = new HashMap[Int, Int]
-    val resultsWithOrders = new HashMap[Int, ResultWithOrder]
+    val results = new HashMap[Int, Result]
 
     loop {
       receive {
@@ -131,7 +136,7 @@ class PoshWolfWebService {
           reply(status.get(id))
 
         case GetResultRequest(id) =>  // TODO co jesli jeszcze sie nie skonczylo?
-          reply(resultsWithOrders.get(id))
+          reply(results.get(id))
 
         case GetAllProgressesRequest(ids) => 
           val res = for(id <- ids) yield new TaskProgressEntry(id, status.get(id))
@@ -139,7 +144,7 @@ class PoshWolfWebService {
 
         case FinishTaskRequest(id, result) => 
           status.put(id, 100) // TODO 100 - czy to jest ok wartosc?
-          resultsWithOrders.put(id, result)
+          results.put(id, result)
       }
     }
   }
