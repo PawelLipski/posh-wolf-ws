@@ -43,7 +43,13 @@ class TaskProgressEntry(_id: Int, _progress: Int) {
 class PoshWolfWebService {
 
   @WebMethod
-  def postTask( @WebParam(name="task") task: TaskDefinition): Int = {
+  def postTask( /*@WebParam(name="task") task: TaskDefinition*/
+    @WebParam(name = "jobCount") jobCount: Int,
+    @WebParam(name = "machineCount") machineCount: Int,
+    @WebParam(name = "opDurationsForJobs") opDurationsForJobs: Array[Array[Int]]
+  ): Int = {    
+    
+    val task = new TaskDefinition(jobCount, machineCount, opDurationsForJobs)
     val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
 
     actor {
@@ -56,10 +62,12 @@ class PoshWolfWebService {
       }
       // run magicAlgo(listener)*/
 
+      /*println(jobCount)
+      println(machineCount)
       for (
-	i <- task.getOpDurationsForJobs;
+	i <- opDurationsForJobs;
 	j <- i) 
-	println(j)
+	println(j)*/
 	
       
       for (i <- List.range(0, 10)) {
@@ -68,7 +76,7 @@ class PoshWolfWebService {
         Thread.sleep(1000)
       }
 
-      val result = new DummySolver().solve(task, 
+      val result = new DummySolver().solve(task,
         new ProgressListener() {
           override def onProgress(percentDone: Int, resultSoFar: Int) {
           }
@@ -112,6 +120,11 @@ class PoshWolfWebService {
 
     result
   }
+  
+  @WebMethod
+  def intMatrixTest(
+    @WebParam(name="matrix")
+  matrix : Array[Array[Int]]) = "Hi " + matrix(1)(1)
 
   private val controller = actor {
     val tasks = new HashMap[Int, TaskDefinition]
