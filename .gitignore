@@ -3,4 +3,5 @@ project/boot
 project/target
 project/plugins/target
 *~
+*.swp
 runner.sh

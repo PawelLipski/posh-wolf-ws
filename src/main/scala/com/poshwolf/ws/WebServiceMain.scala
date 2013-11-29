@@ -134,12 +134,24 @@ class PoshWolfWebService {
     loop {
       receive {
         case PostTaskRequest(task) => 
+          for (row <- task.getOpDurationsForJobs) {
+            println("Row length: " + row.length)
+            for (dur <- row)
+              println(row)
+            println
+          }
           val newId = status.size + 1
           tasks.put(newId, task)
           status.put(newId, 0)
           reply(newId)
 
         case GetTaskDefinitionRequest(id) => 
+          for (row <- tasks.get(id).getOpDurationsForJobs) {
+            println("Row length: " + row.length)
+            for (dur <- row)
+              println(dur)
+            println
+          }
           reply(tasks.get(id))
 
         case SetProgressRequest(id, progress) =>  /// TODO partialResult? iterNo czy percent??
