@@ -53,33 +53,37 @@ class PoshWolfWebService {
     val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
 
     actor {
-      /*listener = new ProgressListener {
-        def onIterationDone(int iterNo, int partialResult) {
-          controller ! (NOTE_PROGRESS, myNumber, iterNo, partialResult)
+
+      var listener = new ProgressListener {
+        override def onProgress(progress: Int, partialResult: Int) {
+          controller ! SetProgressRequest(myId, progress)
         }
-      }*/
-      // run magicAlgo(listener)*/
+      }      
+      val solver = new CuckooSolver
+
+      val result = solver.solve(task, listener)
 
       /*println(jobCount)
       println(machineCount)
       for (
-	i <- opDurationsForJobs;
-	j <- i) 
-	println(j)*/
+        i <- opDurationsForJobs;
+        j <- i) 
+        println(j)*/
 	
       
-      for (i <- List.range(0, 10)) {
+      /*for (i <- List.range(0, 10)) {
         //println("Id: " + myId + ", progress: " + i)
         controller ! SetProgressRequest(myId, i)
         Thread.sleep(1000)
-      }
+      }*/
 
+      /*
       val result = new DummySolver().solve(task,
         new ProgressListener() {
           override def onProgress(percentDone: Int, resultSoFar: Int) {
           }
         }
-      )
+      )*/
         
       controller ! FinishTaskRequest(myId, result)
 
