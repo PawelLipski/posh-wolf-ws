@@ -8,7 +8,7 @@ import java.util.Random;
 public class CuckooSolver implements Solver {
 
   public final static int NEST_NUMBER = 7;
-  public final static int GENERATION_CAP = 100;
+  public final static int GENERATION_CAP = 100000;
   public final static double DISCOVERY_PROBABILITY = .2;
   public final static int NESTS_TO_ABANDON_COUNT = 2;
 
