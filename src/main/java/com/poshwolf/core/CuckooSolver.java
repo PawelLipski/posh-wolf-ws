@@ -9,6 +9,7 @@ public class CuckooSolver implements Solver {
 
   public final static int NEST_NUMBER = 7;
   public final static int GENERATION_CAP = 100000;
+  public final static int FIVE_PERCENT_GENS = GENERATION_CAP / 20;
   public final static double DISCOVERY_PROBABILITY = .2;
   public final static int NESTS_TO_ABANDON_COUNT = 2;
 
@@ -37,7 +38,10 @@ public class CuckooSolver implements Solver {
        System.out.println(" fit: " + nest.getFitness());
        */
     }
-    for (int t = 0; t < GENERATION_CAP; t++) {
+    for (int t = 1; t <= GENERATION_CAP; t++) {
+      
+      if (t % FIVE_PERCENT_GENS == 0)
+        listener.onProgress(t / FIVE_PERCENT_GENS * 5, 33333333);
 
       int jIndex = random.nextInt(NEST_NUMBER);
       Nest jNest = nests.get(jIndex);

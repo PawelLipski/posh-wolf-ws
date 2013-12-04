@@ -53,13 +53,11 @@ class PoshWolfWebService {
     val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
 
     actor {
-      //controller ! InitTaskRequest(myId)
-
       /*listener = new ProgressListener {
         def onIterationDone(int iterNo, int partialResult) {
           controller ! (NOTE_PROGRESS, myNumber, iterNo, partialResult)
         }
-      }
+      }*/
       // run magicAlgo(listener)*/
 
       /*println(jobCount)
