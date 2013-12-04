@@ -43,7 +43,7 @@ class TaskProgressEntry(_id: Int, _progress: Int) {
 class PoshWolfWebService {
 
   @WebMethod
-  def postTask( /*@WebParam(name="task") task: TaskDefinition*/
+  def postTask( 
     @WebParam(name = "jobCount") jobCount: Int,
     @WebParam(name = "machineCount") machineCount: Int,
     @WebParam(name = "opDurationsForJobs") opDurationsForJobs: Array[Array[Int]]
@@ -63,28 +63,6 @@ class PoshWolfWebService {
 
       val result = solver.solve(task, listener)
 
-      /*println(jobCount)
-      println(machineCount)
-      for (
-        i <- opDurationsForJobs;
-        j <- i) 
-        println(j)*/
-	
-      
-      /*for (i <- List.range(0, 10)) {
-        //println("Id: " + myId + ", progress: " + i)
-        controller ! SetProgressRequest(myId, i)
-        Thread.sleep(1000)
-      }*/
-
-      /*
-      val result = new DummySolver().solve(task,
-        new ProgressListener() {
-          override def onProgress(percentDone: Int, resultSoFar: Int) {
-          }
-        }
-      )*/
-        
       controller ! FinishTaskRequest(myId, result)
 
     }.start()
@@ -136,33 +114,21 @@ class PoshWolfWebService {
     loop {
       receive {
         case PostTaskRequest(task) => 
-          for (row <- task.getOpDurationsForJobs) {
-            println("Row length: " + row.length)
-            for (dur <- row)
-              println(row)
-            println
-          }
           val newId = status.size + 1
           tasks.put(newId, task)
           status.put(newId, 0)
           reply(newId)
 
         case GetTaskDefinitionRequest(id) => 
-          for (row <- tasks.get(id).getOpDurationsForJobs) {
-            println("Row length: " + row.length)
-            for (dur <- row)
-              println(dur)
-            println
-          }
           reply(tasks.get(id))
 
-        case SetProgressRequest(id, progress) =>  /// TODO partialResult? iterNo czy percent??
+        case SetProgressRequest(id, progress) =>  
           status.put(id, progress)
 
         case GetProgressRequest(id) => 
           reply(status.get(id))
 
-        case GetResultRequest(id) =>  // TODO co jesli jeszcze sie nie skonczylo?
+        case GetResultRequest(id) =>  
           reply(results.get(id))
 
         case GetAllProgressesRequest(ids) => 
@@ -170,7 +136,7 @@ class PoshWolfWebService {
           reply(res.toArray)
 
         case FinishTaskRequest(id, result) => 
-          status.put(id, 100) // TODO 100 - czy to jest ok wartosc?
+          status.put(id, 100) 
           results.put(id, result)
       }
     }
@@ -182,26 +148,9 @@ class PoshWolfWebService {
 object WebServiceMain {
 
   def main(args: Array[String]) {
-    /*println("Starting controller...")
-    controller.start()
-    println("Controller started")
-
-    val id = Core.initTask
-    println("Started task " + id)
-    val id2 = Core.initTask
-    println("Started task " + id2)
-
-    for (i <- range(1, 40)) {
-      Thread.sleep(1000)
-      val progress = Core.getProgress(id)
-      println("Progress of task " + id + " is " + progress)
-      val progress2 = Core.getProgress(id2)
-      println("Progress of task " + id2 + " is " + progress2)
-    }
-  }*/
 
     val port = Properties.envOrElse("PORT", "8080")
-    val url = "http://0.0.0.0:" + port + "/" // + "/posh-wolf-ws";
+    val url = "http://0.0.0.0:" + port + "/" 
     val endpoint = Endpoint.publish(url, new PoshWolfWebService())
 
     println("Waiting for requests on " + url + "...")
