@@ -39,13 +39,11 @@ public class CuckooSolver implements Solver {
        System.out.println(" fit: " + nest.getFitness());
        */
     }
+
+    Nest bestSoFar = getBestNest();
+
     for (int t = 1; t <= GENERATION_CAP; t++) {
       
-      if (t % FIVE_PERCENT_GENS == 0) {
-        int resultSoFar = getPartialResult();
-        listener.onProgress(t / FIVE_PERCENT_GENS * 5, resultSoFar);
-      }
-
       int jIndex = random.nextInt(NEST_NUMBER);
       Nest jNest = nests.get(jIndex);
 
@@ -81,6 +79,16 @@ public class CuckooSolver implements Solver {
         nests.addAll(replacementNests);
       }	
 
+
+      Nest bestNow = getBestNest();
+      if (bestNow.getFitness() < bestSoFar.getFitness())
+        bestSoFar = bestNow;
+
+      if (t % FIVE_PERCENT_GENS == 1) {
+        int resultSoFar = bestSoFar.getFitness();
+        listener.onProgress(t / FIVE_PERCENT_GENS * 5, resultSoFar);
+      }
+
     }
 
     Collections.sort(nests, new Comparator<Nest>() {
@@ -94,23 +102,19 @@ public class CuckooSolver implements Solver {
     
     double computationTime = (System.nanoTime() - startTime) / 1e9;
     
-    Nest optimalNest = nests.get(0);
-
     Result r = new Result();      
-    r.setJobOrder(optimalNest.getEgg());
-    r.setExecutionTimespan(optimalNest.getFitness());
+    r.setJobOrder(bestSoFar.getEgg());
+    r.setExecutionTimespan(bestSoFar.getFitness());
     r.setComputationTime(computationTime);
 
     return r;
   }
 
-  private int getPartialResult() {
-    int result = nests.get(0).getFitness();
-    for (Nest nest: nests) {
-      int r = nest.getFitness();
-      if (r < result)
-        result = r;
-    }
+  private Nest getBestNest() {
+    Nest result = nests.get(0);
+    for (Nest nest: nests) 
+      if (nest.getFitness() < result.getFitness())
+        result = nest;    
     return result;
   }
 
