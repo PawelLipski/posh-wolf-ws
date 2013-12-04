@@ -13,6 +13,7 @@ public class CuckooSolver implements Solver {
   public final static double DISCOVERY_PROBABILITY = .2;
   public final static int NESTS_TO_ABANDON_COUNT = 2;
 
+  private ArrayList<Nest> nests;
   private Random random;
 
   public CuckooSolver() {
@@ -25,7 +26,7 @@ public class CuckooSolver implements Solver {
     long startTime = System.nanoTime();
 
     /* initial nests */
-    ArrayList<Nest> nests = new ArrayList<Nest>(NEST_NUMBER);
+    nests = new ArrayList<Nest>(NEST_NUMBER);
     for (int i = 0; i < NEST_NUMBER; i++) {
       Nest nest = new Nest(random, task.getJobCount());
       nests.add(nest); // jobCount <=> solution (egg) size
@@ -40,8 +41,10 @@ public class CuckooSolver implements Solver {
     }
     for (int t = 1; t <= GENERATION_CAP; t++) {
       
-      if (t % FIVE_PERCENT_GENS == 0)
-        listener.onProgress(t / FIVE_PERCENT_GENS * 5, 33333333);
+      if (t % FIVE_PERCENT_GENS == 0) {
+        int resultSoFar = getPartialResult();
+        listener.onProgress(t / FIVE_PERCENT_GENS * 5, resultSoFar);
+      }
 
       int jIndex = random.nextInt(NEST_NUMBER);
       Nest jNest = nests.get(jIndex);
@@ -99,6 +102,16 @@ public class CuckooSolver implements Solver {
     r.setComputationTime(computationTime);
 
     return r;
+  }
+
+  private int getPartialResult() {
+    int result = nests.get(0).getFitness();
+    for (Nest nest: nests) {
+      int r = nest.getFitness();
+      if (r < result)
+        result = r;
+    }
+    return result;
   }
 
   private int computeMakespan(TaskDefinition task, int[] permutation) {
