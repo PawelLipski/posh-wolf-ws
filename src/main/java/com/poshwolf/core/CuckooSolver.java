@@ -102,10 +102,14 @@ public class CuckooSolver implements Solver {
     
     double computationTime = (System.nanoTime() - startTime) / 1e9;
     
-    Result r = new Result();      
-    r.setJobOrder(bestSoFar.getEgg());
+    Result r = new Result();          
     r.setExecutionTimespan(bestSoFar.getFitness());
     r.setComputationTime(computationTime);
+
+    int[] order = bestSoFar.getEgg();
+    for (int i = 0; i < order.length; i++)
+      order[i]++;
+    r.setJobOrder(order);
 
     return r;
   }
