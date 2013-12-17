@@ -31,25 +31,16 @@ public class CuckooSolver implements Solver {
       Nest nest = new Nest(random, task.getJobCount());
       nests.add(nest); // jobCount <=> solution (egg) size
       nest.setFitness(computeMakespan(task, nest.getEgg()));
-      /*
-       * print individual solutions
-       System.out.print("egg: ");
-       for(int j = 0; j < jobCount; j++)
-       System.out.print(nest.getEgg()[j] + ", ");
-       System.out.println(" fit: " + nest.getFitness());
-       */
     }
 
     Nest bestSoFar = getBestNest();
 
     for (int t = 1; t <= GENERATION_CAP; t++) {
-      
+
       int jIndex = random.nextInt(NEST_NUMBER);
       Nest jNest = nests.get(jIndex);
 
-      /* !!! change numbers or random sequence */
       Nest nestWithCuckooEgg = new NestWithCuckooEgg(jNest);
-      // Nest nestWithCuckooEgg = new Nest(random, jobCount);
 
       nestWithCuckooEgg.setFitness(computeMakespan(task, nestWithCuckooEgg.getEgg()));
 
@@ -77,7 +68,7 @@ public class CuckooSolver implements Solver {
 
         nests.subList(0, NESTS_TO_ABANDON_COUNT).clear();
         nests.addAll(replacementNests);
-      }	
+      } 
 
 
       Nest bestNow = getBestNest();
@@ -98,10 +89,10 @@ public class CuckooSolver implements Solver {
         }
         });
 
-    
-    
+
+
     double computationTime = (System.nanoTime() - startTime) / 1e9;
-    
+
     Result r = new Result();          
     r.setExecutionTimespan(bestSoFar.getFitness());
     r.setComputationTime(computationTime);
@@ -138,7 +129,7 @@ public class CuckooSolver implements Solver {
       }
     }
 
-    
+
     return timeMachine[task.getMachineCount() - 1];
   }
 }
