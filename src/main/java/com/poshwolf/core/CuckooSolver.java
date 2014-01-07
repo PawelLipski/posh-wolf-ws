@@ -36,6 +36,7 @@ public class CuckooSolver implements Solver {
     }
 
     Nest bestSoFar = getBestNest();
+    int iterationsUntilResult = 0;
 
     for (int t = 1; t <= GENERATION_CAP; t++) {
 
@@ -74,8 +75,10 @@ public class CuckooSolver implements Solver {
 
 
       Nest bestNow = getBestNest();
-      if (bestNow.getFitness() < bestSoFar.getFitness())
+      if (bestNow.getFitness() < bestSoFar.getFitness()) {
         bestSoFar = bestNow;
+        iterationsUntilResult = t;
+      }
 
       if (t % FIVE_PERCENT_GENS == 1) {
         int resultSoFar = bestSoFar.getFitness();
@@ -98,6 +101,7 @@ public class CuckooSolver implements Solver {
     Result r = new Result();          
     r.setExecutionTimespan(bestSoFar.getFitness());
     r.setComputationTime(computationTime);
+    r.setIterationsUntilResult(iterationsUntilResult);
 
     int[] order = bestSoFar.getEgg();
     for (int i = 0; i < order.length; i++)

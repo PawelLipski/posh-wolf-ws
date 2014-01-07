@@ -8,11 +8,13 @@ public class Result {
 
   // Time elapsed for computation (in seconds) must be provided
   private double computationTime;
+
+  // The iteration in which the result has been reached
+  private int iterationsUntilResult;
   
   // The order of jobs to be executed on each machine
   // found by the algorithm
   private int[] jobOrder; // array of length jobCount
-
 
   
   public int getExecutionTimespan() {
@@ -39,6 +41,14 @@ public class Result {
       this.jobOrder = jobOrder;
   }
 
+  
+  public int getIterationsUntilResult() {
+      return iterationsUntilResult;
+  }
+  
+  public void setIterationsUntilResult(int iterationsUntilResult) {
+      this.iterationsUntilResult = iterationsUntilResult;
+  }
 }
 
 
