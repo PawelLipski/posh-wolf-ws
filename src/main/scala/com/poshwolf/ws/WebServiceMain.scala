@@ -62,7 +62,7 @@ class PoshWolfWebService {
           controller ! SetProgressRequest(myId, progress)
         }
       }      
-      val solver = new CuckooSolver
+      val solver = new CuckooSolver(config)
 
       val result = solver.solve(task, listener)
 

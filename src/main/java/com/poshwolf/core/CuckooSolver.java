@@ -15,8 +15,10 @@ public class CuckooSolver implements Solver {
 
   private ArrayList<Nest> nests;
   private Random random;
+  private CuckooSolverConfig config;
 
-  public CuckooSolver() {
+  public CuckooSolver(CuckooSolverConfig config) {
+    this.config = config;
     random = new Random(System.currentTimeMillis());
   }
 
