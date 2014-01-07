@@ -46,9 +46,12 @@ class PoshWolfWebService {
   def postTask( 
     @WebParam(name = "jobCount") jobCount: Int,
     @WebParam(name = "machineCount") machineCount: Int,
-    @WebParam(name = "opDurationsForJobs") opDurationsForJobs: Array[Array[Int]]
+    @WebParam(name = "opDurationsForJobs") opDurationsForJobs: Array[Array[Int]],
+    @WebParam(name = "config") config: CuckooSolverConfig
   ): Int = {    
     
+    println(config.getNestNumber)
+
     val task = new TaskDefinition(jobCount, machineCount, opDurationsForJobs)
     val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
 
