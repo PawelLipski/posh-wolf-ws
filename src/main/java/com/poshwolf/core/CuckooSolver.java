@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class CuckooSolver implements Solver {
 
-  public final static int NEST_NUMBER = 7;
+  //public final static int NEST_NUMBER = 7;
   public final static int GENERATION_CAP = 500000;
   public final static int FIVE_PERCENT_GENS = GENERATION_CAP / 20;
   public final static double DISCOVERY_PROBABILITY = .2;
@@ -28,8 +28,8 @@ public class CuckooSolver implements Solver {
     long startTime = System.nanoTime();
 
     /* initial nests */
-    nests = new ArrayList<Nest>(NEST_NUMBER);
-    for (int i = 0; i < NEST_NUMBER; i++) {
+    nests = new ArrayList<Nest>(config.getNestNumber());
+    for (int i = 0; i < config.getNestNumber(); i++) {
       Nest nest = new Nest(random, task.getJobCount());
       nests.add(nest); // jobCount <=> solution (egg) size
       nest.setFitness(computeMakespan(task, nest.getEgg()));
@@ -39,7 +39,7 @@ public class CuckooSolver implements Solver {
 
     for (int t = 1; t <= GENERATION_CAP; t++) {
 
-      int jIndex = random.nextInt(NEST_NUMBER);
+      int jIndex = random.nextInt(config.getNestNumber());
       Nest jNest = nests.get(jIndex);
 
       Nest nestWithCuckooEgg = new NestWithCuckooEgg(jNest);
