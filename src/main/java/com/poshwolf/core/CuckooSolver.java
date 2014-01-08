@@ -7,12 +7,6 @@ import java.util.Random;
 
 public class CuckooSolver implements Solver {
 
-  //public final static int NEST_NUMBER = 7;
-  //public final static int GENERATION_CAP = 500000;
-  //public final static int FIVE_PERCENT_GENS = GENERATION_CAP / 20;
-  public final static double DISCOVERY_PROBABILITY = .2;
-  public final static int NESTS_TO_ABANDON_COUNT = 2;
-
   private ArrayList<Nest> nests;
   private Random random;
   private CuckooSolverConfig config;
@@ -52,8 +46,8 @@ public class CuckooSolver implements Solver {
         nests.add(nestWithCuckooEgg);
       }
 
-      // With probability DISCOVERY_P we will abandon our worst nest and replace with new nests
-      if (random.nextDouble() < DISCOVERY_PROBABILITY) {
+      // With given probability we will abandon our worst nest and replace with new nests
+      if (random.nextDouble() < config.getDiscoveryProbability()) {
 
         Collections.sort(nests, new Comparator<Nest>() {
             @Override
@@ -62,14 +56,14 @@ public class CuckooSolver implements Solver {
             }
             });
 
-        ArrayList<Nest> replacementNests = new ArrayList<Nest>(NESTS_TO_ABANDON_COUNT);
-        for (int i = 0; i < NESTS_TO_ABANDON_COUNT; ++i) {
+        ArrayList<Nest> replacementNests = new ArrayList<Nest>(config.getNestsToAbandonNumber());
+        for (int i = 0; i < config.getNestsToAbandonNumber(); ++i) {
           Nest nest = new Nest(random, task.getJobCount());
           replacementNests.add(nest); 
           nest.setFitness(computeMakespan(task, nest.getEgg()));  
         }
 
-        nests.subList(0, NESTS_TO_ABANDON_COUNT).clear();
+        nests.subList(0, config.getNestsToAbandonNumber()).clear();
         nests.addAll(replacementNests);
       } 
 
