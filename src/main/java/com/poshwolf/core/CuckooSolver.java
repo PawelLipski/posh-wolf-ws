@@ -8,8 +8,8 @@ import java.util.Random;
 public class CuckooSolver implements Solver {
 
   //public final static int NEST_NUMBER = 7;
-  public final static int GENERATION_CAP = 500000;
-  public final static int FIVE_PERCENT_GENS = GENERATION_CAP / 20;
+  //public final static int GENERATION_CAP = 500000;
+  //public final static int FIVE_PERCENT_GENS = GENERATION_CAP / 20;
   public final static double DISCOVERY_PROBABILITY = .2;
   public final static int NESTS_TO_ABANDON_COUNT = 2;
 
@@ -38,7 +38,7 @@ public class CuckooSolver implements Solver {
     Nest bestSoFar = getBestNest();
     int iterationsUntilResult = 0;
 
-    for (int t = 1; t <= GENERATION_CAP; t++) {
+    for (int t = 1; t <= config.getMaxIterations(); t++) {
 
       int jIndex = random.nextInt(config.getNestNumber());
       Nest jNest = nests.get(jIndex);
@@ -80,19 +80,20 @@ public class CuckooSolver implements Solver {
         iterationsUntilResult = t;
       }
 
-      if (t % FIVE_PERCENT_GENS == 1) {
+      int fivePercentGens = config.getMaxIterations() / 20;
+      if (t % fivePercentGens == 1) {
         int resultSoFar = bestSoFar.getFitness();
-        listener.onProgress(t / FIVE_PERCENT_GENS * 5, resultSoFar);
+        listener.onProgress(t / fivePercentGens * 5, resultSoFar);
       }
 
     }
 
     Collections.sort(nests, new Comparator<Nest>() {
-        @Override
-        public int compare(Nest o1, Nest o2) {
+      @Override
+      public int compare(Nest o1, Nest o2) {
         return o1.getFitness() - o2.getFitness(); // reverse to above
-        }
-        });
+      }
+    });
 
 
 
