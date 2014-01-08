@@ -50,7 +50,11 @@ class PoshWolfWebService {
     @WebParam(name = "config") config: CuckooSolverConfig
   ): Int = {    
     
+    println(config.getMaxIterations)
     println(config.getNestNumber)
+    println(config.getNestsToAbandonNumber)
+    println(config.getDiscoveryProbability)
+    println
 
     val task = new TaskDefinition(jobCount, machineCount, opDurationsForJobs)
     val myId = (controller !? PostTaskRequest(task)).asInstanceOf[Int]
